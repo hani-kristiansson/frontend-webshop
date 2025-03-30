@@ -1,26 +1,44 @@
 let products = [];
+let shoppingCart;
 
-fetch('https://fakestoreapi.com/products')
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(err => console.error(err));
 
-getData("https://fakestoreapi.com/products");
-async function getData(){
+async function getData() {
     const response = await fetch("https://fakestoreapi.com/products");
     products = await response.json();
     console.log(products);
     loadProducts();
+    loadShoppingCart();
 }
 
 let itemsPerPage = 8;
 let currentPage = 1;
 
-function loadProducts() {
+function loadShoppingCart(){
+    const cartLocalStorage = sessionStorage.getItem("selectedProducts");
+    if(cartLocalStorage){
+        shoppingCart = new Map(JSON.parse(cartLocalStorage));
+    } else {
+        shoppingCart = new Map();
+    }
+} 
 
+function addToCart(productId){
+    const currentNrProducts = shoppingCart.get(productId);
+    if(currentNrProducts) {
+        //product id exists in shopping cart then increment
+        shoppingCart.set(productId, (currentNrProducts+1))
+    } else {
+        //Set first time adding product to cart as 1
+        shoppingCart.set(productId, 1);
+    }
+}
+
+function loadProducts() {
     console.log(products);
 
     const grid = document.getElementById("product-grid");
+    grid.innerHTML = ""; 
+
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const itemsToShow = products.slice(start, end);
@@ -29,11 +47,28 @@ function loadProducts() {
         const productDiv = document.createElement("div");
         productDiv.classList.add("product");
         productDiv.innerHTML = `
-            <img src="${product.image}" alt="${product.title}">
+            <div class="product-img-container">
+                <img src="${product.image}" alt="${product.title}">
+            </div>
             <h3>${product.title}</h3>
-            <p>${product.price}</p>
+            <p>${product.price} kr </p>
+            <button class="add-to-cart-btn" data-id="${product.id}">Add to cart</button>
         `;
         grid.appendChild(productDiv);
+    });
+
+
+    document.querySelectorAll(".add-to-cart-btn").forEach(button => {
+        button.addEventListener("click", (event) => {
+            const productID = event.target.dataset.id;
+            localStorage.setItem("selectedProduct", productID); 
+            //add product to cart list
+            addToCart(productID);
+            //update cart in memory, need to store it as string
+            sessionStorage.setItem("selectedProducts", JSON.stringify(Array.from(shoppingCart)));
+            //Don't move to checkout yet
+            //window.location.href = "checkout.html"; 
+        });
     });
 
     currentPage++;

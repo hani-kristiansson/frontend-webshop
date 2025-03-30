@@ -1,73 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Checkout</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <header>
-        <div class="top-header-bar">
-            <p>Free delivery over 1000 SEK</p>
-        </div>
-        <div class="header-main">
-            <div class="logo">
-                <a href="#"><img src="img/By_Hani_Logo.png" alt="By Hani Logo"></a>
-            </div>
-        </div>
-    </header>
-    
-    
-
-    <div class="checkout-form">
-        <h2>Checkout</h2>
-        <form action="submit_checkout.php" method="post">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" placeholder="Förnamn Efternamn" required minlength="2" maxlength="50">
-
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="exempel@mail.com" maxlength="50">
-
-            <label for="phone">Phone Number:</label>
-            <input type="text" id="phone" name="phone" placeholder="070-123 45 67" pattern="[\d\-\(\) ]+" maxlength="50">
-
-            <h3>Delivery Address</h3>
-            <label for="street">Street Address:</label>
-            <input type="text" id="street" name="street" placeholder="Storgatan 12" minlength="2" maxlength="50">
-
-            <label for="zipcode">Zip Code:</label>
-            <input type="text" id="zipcode" name="zipcode" placeholder="12345" required pattern="^\d{5}$" maxlength="5">
-
-            <label for="district">District:</label>
-            <input type="text" id="district" name="district" placeholder="Stockholm" minlength="2" maxlength="50">
-
-            <button type="submit">Submit</button>
-        </form>
-    </div>
-    
-    
-    <hr>
-    <div class="checkout-container">
-        <div class="cart-summary">
-          <h2>Your Cart</h2>
-          <!-- Cart Items Go Here -->
-        </div>
-        <div class="info-section">
-          <h3>Always with us</h3>
-          <ul>
-            <li>100-day return policy</li>
-            <li>Price guarantee</li>
-            <li>Free shipping</li>
-          </ul>
-        </div>
-        <div class="customer-service">
-          <h3>Need Help?</h3>
-          <p>Customer Service: 08-442 83 60</p>
-          <p>Mon - Fri: 9:00 AM - 5:00 PM</p>
+      <div class="top-header-bar">
+        <p>Free delivery over 1000 SEK</p>
+      </div>
+      <div class="header-main">
+        <div class="logo">
+          <a href="#"><img src="img/By_Hani_Logo.png" alt="By Hani Logo" /></a>
         </div>
       </div>
-      <hr>
+    </header>
 
-</body>
+
+    
+    <div class="container mt-5">
+      <div class="row">
+        <!-- Product img and details -->
+        <div class="col-md-6">
+          <div class="card order-card">
+            <img
+              id="product-image-form"
+              class="card-img-top"
+              src="..."
+              alt="Product Image"
+            />
+            <div class="card-body">
+              <h5 id="product-title-form" class="card-title">Product Name</h5>
+              <p id="product-desc-form" class="card-text">
+                Product Description
+              </p>
+              <p id="product-price-form" class="fw-bold">Price</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Checkout form -->
+        <div class="col-md-6">
+          <div class="checkout-form">
+            <h2>Checkout</h2>
+            <form action="submit_checkout.php" method="post">
+              <label for="name">Name:</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Firstname Familyname"
+                required
+                minlength="2"
+                maxlength="50"
+              />
+
+              <label for="email">Email:</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="exempel@mail.com"
+                maxlength="50"
+              />
+
+              <label for="phone">Phone Number:</label>
+              <input
+                type="text"
+                id="phone"
+                name="phone"
+                placeholder="070-123 45 67"
+                pattern="[\d\-\(\) ]+"
+                maxlength="50"
+              />
+
+              <h3>Delivery Address</h3>
+              <label for="street">Street Address:</label>
+              <input
+                type="text"
+                id="street"
+                name="street"
+                placeholder="Storgatan 12"
+                minlength="2"
+                maxlength="50"
+              />
+
+              <label for="zipcode">Zip Code:</label>
+              <input
+                type="text"
+                id="zipcode"
+                name="zipcode"
+                placeholder="12345"
+                required
+                pattern="^\d{5}$"
+                maxlength="5"
+              />
+
+              <label for="district">District:</label>
+              <input
+                type="text"
+                id="district"
+                name="district"
+                placeholder="Stockholm"
+                minlength="2"
+                maxlength="50"
+              />
+
+              <button type="submit" class="btn btn-primary mt-3">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+    <div class="checkout-container">
+      <div class="cart-summary">
+        <h2>Your Cart</h2>
+        <!-- Cart Items Go Here -->
+      </div>
+      <div class="info-section">
+        <h3>Always with us</h3>
+        <ul>
+          <li>100-day return policy</li>
+          <li>Price guarantee</li>
+          <li>Free shipping</li>
+        </ul>
+      </div>
+      <div class="customer-service">
+        <h3>Need Help?</h3>
+        <p>Customer Service: 08-442 83 60</p>
+        <p>Mon - Fri: 9:00 AM - 5:00 PM</p>
+      </div>
+    </div>
+    <hr />
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  </body>
 </html>

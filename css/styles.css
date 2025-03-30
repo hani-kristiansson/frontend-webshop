@@ -93,7 +93,6 @@ header {
         padding: 8px 0;
     }
 
-
     .header-main {
         flex-direction: column;
     }
@@ -113,6 +112,11 @@ header {
     .navigation ul {
         flex-direction: row;
         align-items: center;
+    }
+
+    .image {
+        width: 80%;
+        margin: auto;
     }
 }
 
@@ -153,7 +157,20 @@ header {
 
 .container {
     max-width: 90%;
+    position: relative;
 }
 
+.image {
+    opacity: 1;
+    display: block;
+    width: 75%;
+    height: auto;
+    transition: opacity 0.5s ease-in-out;
+    margin: auto;
+}
+
+.container:hover .image {
+    opacity: 0.5;
+}
   
 
