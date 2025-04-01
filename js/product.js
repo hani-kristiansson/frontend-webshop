@@ -14,7 +14,7 @@ let itemsPerPage = 8;
 let currentPage = 1;
 
 function loadShoppingCart(){
-    const cartLocalStorage = sessionStorage.getItem("selectedProducts");
+    const cartLocalStorage = localStorage.getItem("selectedProducts");
     if(cartLocalStorage){
         shoppingCart = new Map(JSON.parse(cartLocalStorage));
     } else {

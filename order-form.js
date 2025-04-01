@@ -1,13 +1,21 @@
 let shoppingCart;
 
-function loadShoppingCart(){
-    const cartLocalStorage = sessionStorage.getItem("selectedProducts");
-    if(cartLocalStorage){
-        shoppingCart = new Map(JSON.parse(cartLocalStorage));
-    } else {
-        shoppingCart = new Map();
-    }
-} 
+function loadShoppingCart() {
+  const cartLocalStorage = localStorage.getItem("selectedProducts");
+  if (cartLocalStorage) {
+    shoppingCart = new Map(JSON.parse(cartLocalStorage));
+  } else {
+    shoppingCart = new Map();
+  }
+}
+
+
+
+async function fetchProductData(productId) {
+  const response = await fetch(`https://fakestoreapi.com/products/${productId}`);
+  const data = await response.json();
+  return data;
+}
 
 async function getData() {
   const productID = localStorage.getItem("selectedProduct");
@@ -17,22 +25,30 @@ async function getData() {
   }
 
   const containerCheckout = document.getElementById("checkout-container");
-  if(shoppingCart){
+  //Clear container checkout before adding current products
+  containerCheckout.innerHTML = '';
+  //If we have a shoppingcart
+  if (shoppingCart) {
+    console.log(shoppingCart)
     shoppingCart.forEach(function (value, key) {
-        
+      const product = fetchProductData(key).then(product => {
+        if (product) {
+          const productDiv = document.createElement("div");
+          productDiv.classList.add("product","card","order-card");
+          productDiv.innerHTML = `
+            <div class="product-img-container">
+                <img src="${product.image}" alt="${product.title}">
+            </div>
+            <h3>${product.title}</h3>
+            <p>${product.price} kr </p>
+            <p>Amount: ${value}</p>
+        `;
+          containerCheckout.appendChild(productDiv);
+        }
+      });
 
     })
   }
-
-  const response = await fetch(
-    `https://fakestoreapi.com/products/${productID}`
-  );
-  const data = await response.json();
-
-  document.getElementById("product-image-form").src = data.image;
-  document.getElementById("product-title-form").textContent = data.title;
-  document.getElementById("product-desc-form").textContent = data.description;
-  document.getElementById("product-price-form").textContent = `$${data.price}`;
 }
 
 function orderConfirmation() {
@@ -40,8 +56,6 @@ function orderConfirmation() {
   console.log("Found product ID:", productID);
   window.location.href = `order-confirmation.html?product-id=${productID}`;
 }
-
-getData();
 
 function validateForm() {
   let isValid = true;
@@ -100,3 +114,6 @@ function validateForm() {
   }
   return isValid;
 }
+
+loadShoppingCart();
+getData();
