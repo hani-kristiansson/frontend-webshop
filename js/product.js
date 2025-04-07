@@ -37,8 +37,7 @@ function loadProducts() {
     console.log(products);
 
     const grid = document.getElementById("product-grid");
-    grid.innerHTML = ""; 
-
+    
     const start = (currentPage - 1) * itemsPerPage;
     const end = start + itemsPerPage;
     const itemsToShow = products.slice(start, end);
