@@ -1,54 +1,68 @@
-let shoppingCart;
+let shoppingCart = [];
 
 function loadShoppingCart() {
   const cartLocalStorage = localStorage.getItem("selectedProducts");
   if (cartLocalStorage) {
-    shoppingCart = new Map(JSON.parse(cartLocalStorage));
-  } else {
-    shoppingCart = new Map();
+    shoppingCart = JSON.parse(cartLocalStorage);
   }
 }
 
-
-
-async function fetchProductData(productId) {
-  const response = await fetch(`https://fakestoreapi.com/products/${productId}`);
-  const data = await response.json();
-  return data;
+function convertToSEK(usd) {
+  const fixedExchangeRateUSDtoSEK = 10.5;
+  return (usd * fixedExchangeRateUSDtoSEK).toFixed(0);
 }
+
 
 async function getData() {
-  const productID = localStorage.getItem("selectedProduct");
-  if (!productID) {
-    console.error("No product ID found in localStorage.");
-    return;
-  }
+  loadShoppingCart();  
 
   const containerCheckout = document.getElementById("checkout-container");
-  //Clear container checkout before adding current products
-  containerCheckout.innerHTML = '';
-  //If we have a shoppingcart
-  if (shoppingCart) {
-    console.log(shoppingCart)
-    shoppingCart.forEach(function (value, key) {
-      const product = fetchProductData(key).then(product => {
-        if (product) {
-          const productDiv = document.createElement("div");
-          productDiv.classList.add("product","card","order-card");
-          productDiv.innerHTML = `
-            <div class="product-img-container">
-                <img src="${product.image}" alt="${product.title}">
-            </div>
-            <h3>${product.title}</h3>
-            <p>${product.price} kr </p>
-            <p>Amount: ${value}</p>
+  const cartSummary = document.querySelector('.cart-summary'); 
+  let total = 0;
+  if (shoppingCart.length > 0) {
+    
+    for(let i = 0; i < shoppingCart.length; i++ ){
+      const data = shoppingCart[i];
+      const productId = data[0];
+      const quantity =data[1];
+      await fetchProductData(productId).then(productData => {
+        const productDiv = document.createElement("div");
+        productDiv.classList.add("product", "card", "order-card");
+  
+        const sek = convertToSEK(productData.price); 
+  
+        productDiv.innerHTML = `
+          <div class="checkout-img-container">
+            <img src="${productData.image}" alt="${productData.title}">
+          </div>
+          <h3>${productData.title}</h3>
+          <p>${sek} kr</p>
+          <p>Amount: ${quantity}</p>
+          <p>Total: ${convertToSEK(productData.price * quantity)} kr</p>
         `;
-          containerCheckout.appendChild(productDiv);
-        }
+        containerCheckout.appendChild(productDiv);
+  
+        total += productData.price * quantity;
       });
+    }
+      
+    
 
-    })
+    const totalDiv = document.createElement("div");
+    totalDiv.classList.add("cart-total");
+    totalDiv.innerHTML = `<h3>Total: ${convertToSEK(total)} kr</h3>`;
+    cartSummary.appendChild(totalDiv);
+  } else {
+    containerCheckout.innerHTML = "<p>Your cart is empty.</p>";
   }
+}
+
+
+
+
+function fetchProductData(productId) {
+  return fetch(`https://fakestoreapi.com/products/${productId}`)
+  .then(response => response.json());
 }
 
 function orderConfirmation() {
@@ -115,5 +129,4 @@ function validateForm() {
   return isValid;
 }
 
-loadShoppingCart();
-getData();
+document.addEventListener("DOMContentLoaded", getData);

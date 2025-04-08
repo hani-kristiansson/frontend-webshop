@@ -1,26 +1,26 @@
 let products = [];
 let shoppingCart;
 
-
 async function getData() {
-    const response = await fetch("https://fakestoreapi.com/products");
-    products = await response.json();
-    console.log(products);
-    loadProducts();
-    loadShoppingCart();
+  const response = await fetch("https://fakestoreapi.com/products");
+  products = await response.json();
+  console.log(products);
+  await loadProducts();
+  loadShoppingCart();
 }
 
 let itemsPerPage = 8;
 let currentPage = 1;
 
-function loadShoppingCart(){
-    const cartLocalStorage = localStorage.getItem("selectedProducts");
-    if(cartLocalStorage){
-        shoppingCart = new Map(JSON.parse(cartLocalStorage));
-    } else {
-        shoppingCart = new Map();
-    }
-} 
+function loadShoppingCart() {
+  const cartLocalStorage = localStorage.getItem("selectedProducts");
+  if (cartLocalStorage) {
+    shoppingCart = new Map(JSON.parse(cartLocalStorage));
+  } else {
+    shoppingCart = new Map();
+  }
+}
+
 
 function addToCart(productId){
     const currentNrProducts = shoppingCart.get(productId);
@@ -33,49 +33,61 @@ function addToCart(productId){
     }
 }
 
-function loadProducts() {
-    console.log(products);
+const fixedExchangeRateUSDtoSEK = 10.5; 
 
-    const grid = document.getElementById("product-grid");
-    
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const itemsToShow = products.slice(start, end);
+function convertToSEK(usd) {
+    return (usd * fixedExchangeRateUSDtoSEK).toFixed(0); 
+}
 
-    itemsToShow.forEach(product => {
-        const productDiv = document.createElement("div");
-        productDiv.classList.add("product");
-        productDiv.innerHTML = `
+async function loadProducts() {
+  console.log(products);
+
+  const grid = document.getElementById("product-grid");
+
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  const itemsToShow = products.slice(start, end);
+
+
+  itemsToShow.forEach((product) => {
+    const sek = convertToSEK(product.price); 
+
+    const productDiv = document.createElement("div");
+    productDiv.classList.add("product");
+    productDiv.innerHTML = `
             <div class="product-img-container">
                 <img src="${product.image}" alt="${product.title}">
             </div>
             <h3>${product.title}</h3>
-            <p>${product.price} kr </p>
+            <p>${sek} kr </p>
             <button class="add-to-cart-btn" data-id="${product.id}">Add to cart</button>
         `;
-        grid.appendChild(productDiv);
+    grid.appendChild(productDiv);
+  });
+
+  document.querySelectorAll(".add-to-cart-btn").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      const productID = event.target.dataset.id;
+      localStorage.setItem("selectedProduct", productID);
+      // add product to cart list
+      addToCart(productID);
+      // update cart in memory, need to store it as string
+      localStorage.setItem(
+        "selectedProducts",
+        JSON.stringify(Array.from(shoppingCart))
+      );
+      // Don't move to checkout yet
+      // window.location.href = "checkout.html";
     });
+  });
 
-
-    document.querySelectorAll(".add-to-cart-btn").forEach(button => {
-        button.addEventListener("click", (event) => {
-            const productID = event.target.dataset.id;
-            localStorage.setItem("selectedProduct", productID); 
-            //add product to cart list
-            addToCart(productID);
-            //update cart in memory, need to store it as string
-            sessionStorage.setItem("selectedProducts", JSON.stringify(Array.from(shoppingCart)));
-            //Don't move to checkout yet
-            //window.location.href = "checkout.html"; 
-        });
-    });
-
-    currentPage++;
-    if (end >= products.length) {
-        document.getElementById("load-more").style.display = "none";
-    }
+  currentPage++;
+  if (end >= products.length) {
+    document.getElementById("load-more").style.display = "none";
+  }
 }
 
 document.getElementById("load-more").addEventListener("click", loadProducts);
 
 getData();
+
