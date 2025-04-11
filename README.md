@@ -29,4 +29,13 @@ You can check out the live version of the project here: [Frontend Webshop Demo](
 - **API**: [FakeStoreAPI](https://fakestoreapi.com/) for fetching product data.
 - **Images**: Generated using ChatGPT for brand logo, image on main page.
 
-<img src="https://github.com/user-attachments/assets/ca0b4eef-c1c2-4d20-a1aa-4f1bae4ef346" alt="image" width="300"/>
+## Screenshots
+
+### 1. Main Page
+![Main Page](https://github.com/user-attachments/assets/ca0b4eef-c1c2-4d20-a1aa-4f1bae4ef346)
+
+### 2. Product 
+![Product Details](https://github.com/user-attachments/assets/7204afdc-75bc-4ab4-b80b-ac1fe1679d40)
+
+### 3. Shopping Cart
+![Shopping Cart](https://github.com/user-attachments/assets/5d0e023a-d968-4dbb-b09c-43235e7e9f50)
