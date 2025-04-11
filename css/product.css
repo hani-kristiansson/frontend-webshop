@@ -60,11 +60,6 @@ h3 {
     font-family: 'Arial', sans-serif;
 }
 
-p {
-    color: #666;
-    font-weight: bold;
-}
-
 .load-more {
     display: inline-block;
     margin: 20px auto;
@@ -81,8 +76,6 @@ p {
     background: black;
     color: white;
 }
-
-
 
 @media (max-width: 600px) {
     .product-grid {

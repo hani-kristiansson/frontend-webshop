@@ -17,6 +17,14 @@ function saveShoppingCart() {
   );
 }
 
+function clearShoppingCart() {
+  shoppingCart = [];
+  productList = [];
+  localStorage.removeItem("selectedProducts");
+  loadShoppingCart();
+  displayShoppingCart(); 
+}
+
 function convertToSEK(usd) {
   const fixedExchangeRateUSDtoSEK = 10.5;
   return (usd * fixedExchangeRateUSDtoSEK).toFixed(0);
@@ -143,75 +151,75 @@ async function displayShoppingCart() {
   }
 }
 
-
-
-
 function fetchProductData(productId) {
   return fetch(`https://fakestoreapi.com/products/${productId}`)
   .then(response => response.json());
 }
 
 function orderConfirmation() {
-  const productID = localStorage.getItem("selectedProduct");
-  console.log("Found product ID:", productID);
-  window.location.href = `order-confirmation.html?product-id=${productID}`;
+  saveShoppingCart();
+  window.location.href = `order-confirmation.html`;
 }
 
 function validateForm() {
   let isValid = true;
 
-  document.getElementById("nameError").textContent = "";
-  document.getElementById("emailError").textContent = "";
-  document.getElementById("addressError").textContent = "";
-  document.getElementById("areaCodeError").textContent = "";
-  document.getElementById("districtError").textContent = "";
-  document.getElementById("mobileError").textContent = "";
+  const nameError = document.getElementById("nameError");
+  const emailError = document.getElementById("emailError");
+  const addressError = document.getElementById("addressError");
+  const areaCodeError =  document.getElementById("areaCodeError");
+  const districtError = document.getElementById("districtError");
+  const mobileError = document.getElementById("mobileError");
 
-  let name = document.getElementById("exampleInputname").value;
+  nameError.textContent = "";
+  emailError.textContent = "";
+  addressError.textContent = "";
+  areaCodeError.textContent = "";
+  districtError.textContent = "";
+  mobileError.textContent = "";
+
+  let name = document.getElementById("name").value;
   if (name.length < 2 || name.length > 50) {
-    document.getElementById("nameError").textContent =
+    nameError.textContent =
       "Name must be between 2 and 50 characters.";
     isValid = false;
   }
 
-  let email = document.getElementById("exampleInputEmail1").value;
+  let email = document.getElementById("email").value;
   if (!email.includes("@") || email.length > 50) {
-    document.getElementById("emailError").textContent =
+    emailError.textContent =
       "Email must contain '@' and be less than 50 characters.";
     isValid = false;
   }
 
-  let address = document.getElementById("exampleInputAddress").value;
+  let address = document.getElementById("street").value;
   if (address.length < 2 || address.length > 50) {
-    document.getElementById("addressError").textContent =
+    addressError.textContent =
       "Address must be between 2 and 50 characters.";
     isValid = false;
   }
 
-  let postalCode = document.getElementById("exampleInputAreaCode").value;
+  let postalCode = document.getElementById("zipcode").value;
   if (postalCode.length !== 5 || isNaN(postalCode)) {
-    document.getElementById("areaCodeError").textContent =
+    areaCodeError.textContent =
       "Postal code must be exactly 5 digits.";
     isValid = false;
   }
 
-  let district = document.getElementById("exampleInputDistrict").value;
+  let district = document.getElementById("district").value;
   if (district.length < 2 || district.length > 50) {
-    document.getElementById("districtError").textContent =
+    districtError.textContent =
       "District must be between 2 and 50 characters.";
     isValid = false;
   }
 
-  let mobile = document.getElementById("exampleInputMobileNumber").value;
-  if (mobile.length > 50 || /[^0-9()-]/.test(mobile)) {
-    document.getElementById("mobileError").textContent =
-      "Phone number can only contain numbers, hyphens, and parentheses, and must be up to 50 characters.";
+  let mobile = document.getElementById("phone").value;
+  if (mobile.length > 50 || mobile.length == 0  || /[^0-9()-]/.test(mobile)) {
+    mobileError.textContent =
+      "Phone number is required and can only contain numbers, hyphens, and parentheses, and must be up to 50 characters.";
     isValid = false;
   }
-
-  if (isValid) {
-    window.location.href = "order-confirmation.html";
-  }
+  
   return isValid;
 }
 

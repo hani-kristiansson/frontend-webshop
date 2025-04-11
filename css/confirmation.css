@@ -1,0 +1,14 @@
+.product img{
+    max-width: 8em;
+    max-height: 8em;
+}
+
+.thank-you-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.thank-you-container div {
+    padding-top: 2em;
+}
